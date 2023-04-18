@@ -79,6 +79,34 @@ class Myhome extends StatelessWidget {
               children: [
                 LatestExpense()
               ],
+            ),
+            Column(
+              children: [
+                SizedBox.fromSize(
+                  size: Size(56, 56),
+                  child: ClipOval(
+                    child: Material(
+                      color: Colors.amberAccent,
+                      child: InkWell(
+                        splashColor: Colors.green,
+                        onTap: () {},
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children:  <Widget>[
+                            IconButton(
+                              color: Colors.white,
+                              onPressed: () {
+                                Navigator.pushNamed(context,'Insert');
+                              },
+                              icon: const Icon(Icons.arrow_forward),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
             )
           ],
         ),
