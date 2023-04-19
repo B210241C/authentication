@@ -1,11 +1,14 @@
-import 'package:authentication/Insert.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:authentication/login.dart';
-import 'package:authentication/register.dart';
-import 'package:authentication/home.dart';
-import 'package:authentication/Summary.dart';
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'package:project/firebase_options.dart';
+import 'package:project/login.dart';
+import 'package:project/register.dart';
+import 'package:project/home.dart';
+
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(ExpenseApp());
 }
 
@@ -18,12 +21,7 @@ class ExpenseApp extends StatelessWidget{
         MyLogin.id: (context) => MyLogin(),
         MyRegister.id: (context) => MyRegister(),
         Myhome.id:(context) => Myhome(),
-        Insert.id:(context)=> InsertPage(),
-        SummarySpend.id:(context)=> MyPage(),
-
-
       },
     );
   }
 }
-

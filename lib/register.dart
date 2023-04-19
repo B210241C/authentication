@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class MyRegister extends StatefulWidget {
   static String id = 'register';
@@ -7,6 +9,10 @@ class MyRegister extends StatefulWidget {
 }
 
 class _MyRegisterState extends State<MyRegister> {
+  String ? password;
+  String ? email;
+  final _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -35,24 +41,14 @@ class _MyRegisterState extends State<MyRegister> {
                   left: 35,
                   top: MediaQuery.of(context).size.height * 0.27),
               child: Column(children: [
-                TextField(
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.black),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.white),
-                    ),
-                    hintText: 'Name',
-                    hintStyle: const TextStyle(color: Colors.white),
-                  ),
-                ),
+
                 const SizedBox(
                   height: 30,
                 ),
                 TextField(
+                  onChanged:(value){
+                    email = value;
+                  },
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -70,6 +66,9 @@ class _MyRegisterState extends State<MyRegister> {
                   height: 30,
                 ),
                 TextField(
+                  onChanged:(value){
+                    password = value;
+                  },
                   obscureText: true,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -100,10 +99,38 @@ class _MyRegisterState extends State<MyRegister> {
                       ),
                       CircleAvatar(
                         radius: 30,
-                        backgroundColor: const Color(0xff4c505b),
+                        backgroundColor: const Color(0xff4c505),
                         child: IconButton(
                           color: Colors.white,
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              var userRegistered = await _auth.createUserWithEmailAndPassword(email: email!, password: password!);
+
+                              if(userRegistered != null) {
+
+                                Navigator.pushNamed(context, "login");
+                              }
+                            } catch(e) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Login Error"),
+                                      content: Text(e.toString()),
+                                      actions: [
+                                        TextButton(
+                                          child: Text("OK"),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  });
+
+                            }
+                          },
+
                           icon: const Icon(Icons.arrow_forward),
                         ),
                       ),
@@ -111,6 +138,7 @@ class _MyRegisterState extends State<MyRegister> {
                 const SizedBox(
                   height: 40,
                 ),
+
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -135,4 +163,14 @@ class _MyRegisterState extends State<MyRegister> {
       ),
     );
   }
+
+}
+Create() {
+// FirebaseAuth.instance
+//     .createUserWithEmailAndPassword(
+// email: _emailTextController.text,
+// password: _passwordTextController.text)
+//     .then((value) {
+// print("Created New Account");
+// });
 }

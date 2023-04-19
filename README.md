@@ -1,4 +1,4 @@
-# authentication
+# project
 
 A new Flutter project.
 
