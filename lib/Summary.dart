@@ -43,8 +43,8 @@ class SummarySpend extends State<MyPage> {
             TextField(
               enabled: false, // Set the text field to be disabled
               decoration: InputDecoration(
-                  labelText: 'Utility',
-                  prefixIcon: Icon(Icons.payment),
+                labelText: 'Utility',
+                prefixIcon: Icon(Icons.payment),
               ),
               controller: TextEditingController(text: utility),
             ),
@@ -65,33 +65,41 @@ class SummarySpend extends State<MyPage> {
               controller: TextEditingController(text: entertainment),
             ),
 
+
+
             SizedBox(height: 16.0),
-            DropdownButton<String>(
-              value: selectedPeriod,
-              onChanged: (String? value) {
-                setState(() {
-                  selectedPeriod = value!;
-                });
+            ElevatedButton(
+              onPressed: () {
+                // Add your logic here for displaying date picker
+                _showDatePicker(context);
               },
-              items: <String>['Daily', 'Weekly', 'Monthly', 'Yearly']
-                  .map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
+              child: Text('Choose Date'),
+
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                // Access the selected period from the dropdown
-                print('Selected Period: $selectedPeriod');
+                // Add your logic here for saving data to the database
               },
-              child: Text('Submit'),
+              child: Text('Save'),
             ),
+
           ],
         ),
       ),
     );
+  }
+
+  void _showDatePicker(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2021),
+      lastDate: DateTime(2030),
+    );
+
+    if (pickedDate != null) {
+      // Add your logic here for handling the picked date and fetching data from the database
+    }
   }
 }
