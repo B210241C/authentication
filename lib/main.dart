@@ -5,9 +5,18 @@ import 'package:authentication/login.dart';
 import 'package:authentication/register.dart';
 import 'package:authentication/home.dart';
 import 'package:authentication/Summary.dart';
-void main() {
+
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+
+
+Future<void> main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(ExpenseApp());
 }
+
 
 class ExpenseApp extends StatelessWidget{
   @override

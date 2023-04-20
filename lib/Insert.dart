@@ -1,13 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
+
+
 class InsertPage extends StatefulWidget {
+
+
+
   @override
   Insert createState() => Insert();
 }
 
 class Insert extends State<InsertPage> {
+
+  final _firestore = FirebaseFirestore.instance;
+
   static String id = 'Insert';
   // Variables for food, utility, transportation, and entertainment
   String food = '';
@@ -102,6 +111,8 @@ class Insert extends State<InsertPage> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
+                _firestore.collection('categories').add({'entertainmentcost': entertainment, 'foodcost' : food,'transportcost': transportation,'utility':utility,'timestamp' : selectedDate});
+                //'timestamp' : FieldValue.serverTimestamp() -> get current time
                 // Perform insertion logic with the variables and selected date
                 print('Food: $food');
                 print('Utility: $utility');
