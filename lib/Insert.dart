@@ -111,7 +111,7 @@ class Insert extends State<InsertPage> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                _firestore.collection('categories').add({'entertainmentcost': entertainment, 'foodcost' : food,'transportcost': transportation,'utility':utility,'timestamp' : selectedDate});
+                _firestore.collection('categories').add({'entertainmentcost': entertainment, 'foodcost' : food,'transportcost': transportation,'utilitycost':utility,'timestamp' : selectedDate});
                 //'timestamp' : FieldValue.serverTimestamp() -> get current time
                 // Perform insertion logic with the variables and selected date
                 print('Food: $food');

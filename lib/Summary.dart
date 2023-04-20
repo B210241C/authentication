@@ -22,9 +22,10 @@ class SummarySpend extends State<MyPage> {
       .collection('categories')
       .doc('Kdkv6798qnRIezQA5u7f');
 
+int choosedatenumber = 0;
 
-
-  late final DateTime? pickedDate;
+  late DateTime? pickedDate;
+  late DateTime selectedDate = DateTime.now();
   String entertainmentcostString = '';
   static String id = 'SummarySpend';
 
@@ -53,9 +54,15 @@ class SummarySpend extends State<MyPage> {
   TextEditingController transportationController = TextEditingController();
   TextEditingController entertainmentController = TextEditingController();
 
+  // Add your logic here for handling the picked date and fetching data from the database
 
 
-
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   selectedDate = DateTime.now();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -114,10 +121,20 @@ class SummarySpend extends State<MyPage> {
 
 
             SizedBox(height: 16.0),
+            Text('Selected Date: ${selectedDate.toString()}'),
             ElevatedButton(
               onPressed: () {
                 // Add your logic here for displaying date picker
                 _showDatePicker(context);
+
+                // foodcostTotal = 0;
+                // utilitycostTotal = 0;
+                // transportcostTotal = 0;
+                // entertainmentcostTotal = 0;
+
+
+
+
               },
               child: Text('Choose Date'),
 
@@ -127,9 +144,7 @@ class SummarySpend extends State<MyPage> {
 
               onPressed: () async {
 
-                if (pickedDate != null) {
-
-                  // Add your logic here for handling the picked date and fetching data from the database
+                if (pickedDate != null  && pickedDate!= selectedDate) {
 
 
                   // Convert the picked date into a Timestamp object
@@ -138,64 +153,91 @@ class SummarySpend extends State<MyPage> {
                   // Query the categories collection for documents with a timestamp
                   // greater than or equal to the start of the picked date and less
                   // than the start of the next day
-                  final querySnapshot = await usersRef.where('timestamp', isGreaterThanOrEqualTo: pickedTimestamp, isLessThan: Timestamp.fromDate(pickedDate!.add(Duration(days: 1)))).get();
+                  QuerySnapshot snapshot = await usersRef.where('timestamp', isGreaterThanOrEqualTo: pickedTimestamp, isLessThan: Timestamp.fromDate(pickedDate!.add(Duration(days: 1)))).get();
+
+
                   // Update the state of the app to display the appropriate values
-                  if (querySnapshot.docs.isNotEmpty) {
-                    final data = querySnapshot.docs.first.data();
+                  if (snapshot.docs.isNotEmpty) {
+
                     setState(() {
 
+                      selectedDate = pickedDate ?? selectedDate;
 
-                      querySnapshot.docs.forEach((document) {
-
-
-                        food = (document.data() as Map<String, dynamic>)['foodcost'].toString();
-                        utility = (document.data() as Map<String, dynamic>)['utilitycost'].toString();
-                        transportation = (document.data() as Map<String, dynamic>)['transportcost'].toString();
-                        entertainment = (document.data() as Map<String, dynamic>)['entertainmentcost'].toString();
-
-                        foodcost = double.parse((document.data() as Map<String, dynamic>)['foodcost']);
-                        utilitycost = double.parse((document.data() as Map<String, dynamic>)['utilitycost']);
-                        transportcost = double.parse((document.data() as Map<String, dynamic>)['transportcost']);
-                        entertainmentcost = double.parse((document.data() as Map<String, dynamic>)['entertainmentcost']);
-
-                        DateTime date = (document.data() as Map<String, dynamic>)['timestamp'].toDate();
-
-                    if  (date.day == DateTime.now().day) {
+                      // Initialize the values of all categories to zero
+                      foodcostTotal = 0.0;
+                      utilitycostTotal = 0.0;
+                      transportcostTotal = 0.0;
+                      entertainmentcostTotal = 0.0;
 
 
 
-                      foodcostTotal += foodcost;
-                      utilitycostTotal += utilitycost;
-                      transportcostTotal += transportcost;
-                      entertainmentcostTotal += entertainmentcost;
 
-                    }else if (date.day != DateTime.now().day){
-                    }
+                      // for (final document in snapshot.docs) {
+                      //   // Get the data from the document
+                      //   //final data = document.data();
+                      //
+                      //   final Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+                      //
+                      //   // Add the cost of each category to their respective totals
+                      //   foodcostTotal += int.parse((data['foodcost'] ?? '0').toString());
+                      //   utilitycostTotal += int.parse((data['utilitycost'] ?? '0').toString());
+                      //   transportcostTotal += int.parse((data['transportcost'] ?? '0').toString());
+                      //   entertainmentcostTotal += int.parse((data['entertainmentcost'] ?? '0').toString());
+                      //
+                      //   // foodcostTotal += int.parse((document.data() as Map<String, dynamic>)['foodcost']);
+                      //   // utilitycostTotal += int.parse((document.data() as Map<String, dynamic>)['utilitycost']);
+                      //   // transportcostTotal += int.parse((document.data() as Map<String, dynamic>)['transportcost']);
+                      //   // entertainmentcostTotal += int.parse((document.data() as Map<String, dynamic>)['entertainmentcost']);
+                      //
+                      //   // You can also display the data from each document individually here
+                      //   // by adding them to a list and then displaying the list in your widget
+                      // }
+                      //       foodController.text = foodcostTotal.toString();
+                      //       utilityController.text = utilitycostTotal.toString();
+                      //       transportationController.text = transportcostTotal.toString();
+                      //       entertainmentController.text = entertainmentcostTotal.toString();
 
 
 
-                        foodController.text = foodcostTotal.toString();
-                        utilityController.text = utilitycostTotal.toString();
-                        transportationController.text = transportcostTotal.toString();
-                        entertainmentController.text = entertainmentcostTotal.toString();
+                      snapshot.docs.forEach((document) {
+
+
+                          final Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+                          // Add the cost of each category to their respective totals
+                          foodcostTotal += int.parse((data['foodcost'] ??'0').toString());
+                          utilitycostTotal += int.parse((data['utilitycost'] ??'0').toString());
+                          transportcostTotal += int.parse((data['transportcost'] ??'0').toString());
+                          entertainmentcostTotal += int.parse((data['entertainmentcost'] ??'0').toString());
+
+
+
+                            foodController.text = foodcostTotal.toString();
+                            utilityController.text = utilitycostTotal.toString();
+                            transportationController.text = transportcostTotal.toString();
+                            entertainmentController.text = entertainmentcostTotal.toString();
+
                       });
+
+
+
                     });
 
                   } else {
                     // No data was found for the selected date
                     setState(() {
-                      food = 'No data available';
-                      utility = 'No data available';
-                      transportation = 'No data available';
-                      entertainment = 'No data available';
-                      foodController.text = food;
-                      utilityController.text = utility;
-                      transportationController.text = transportation;
-                      entertainmentController.text = entertainment;
+
+                      // pickedDate = null;
+
+
                     });
                   }
 
                 }
+                // foodController.clear();
+                // utilityController.clear();
+                // transportationController.clear();
+                // entertainmentController.clear();
 
                 // Add your logic here for saving data to the database
 
