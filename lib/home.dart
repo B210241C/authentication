@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:project/latast_expense.dart';
-import 'package:project/pie_chart.dart';
+import 'package:authentication/latast_expense.dart';
+import 'package:authentication/pie_chart.dart';
 
 class Myhome extends StatefulWidget {
   static const String id = 'home';
@@ -57,7 +57,7 @@ class _MyhomeState extends State<Myhome> {
                         },
                       )
                     ],
-                  );
+                  );//this is button for Tips on saving money.
                 },
               );
             },

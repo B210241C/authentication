@@ -116,7 +116,7 @@ class _MyLoginState extends State<MyLogin> {
                           }
                         },
                         icon: const Icon(Icons.arrow_forward),
-                      ),
+                      ),// when user enter username and password is Success,This button will redirect to the home page
                     ),
                   ],
                 ),
