@@ -21,6 +21,10 @@ class ExpenseApp extends StatelessWidget{
         MyLogin.id: (context) => MyLogin(),
         MyRegister.id: (context) => MyRegister(),
         Myhome.id:(context) => Myhome(),
+        Insert.id:(context)=> InsertPage(),
+        SummarySpend.id:(context)=> MyPage(),
+
+
       },
     );
   }
