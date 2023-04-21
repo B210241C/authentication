@@ -97,6 +97,8 @@ class Insert extends State<InsertPage> {
               ),
             ),
             SizedBox(height: 16.0),
+
+            // pop put calander to select date
             ElevatedButton(
               onPressed: () {
                 _showDatePicker(context);
@@ -108,17 +110,28 @@ class Insert extends State<InsertPage> {
               'Selected Date: ${DateFormat('yyyy-MM-dd').format(selectedDate)}',
               style: TextStyle(fontSize: 16.0),
             ),
+
             SizedBox(height: 16.0),
+
             ElevatedButton(
               onPressed: () {
-                _firestore.collection('categories').add({'entertainmentcost': entertainment, 'foodcost' : food,'transportcost': transportation,'utilitycost':utility,'timestamp' : selectedDate});
-                //'timestamp' : FieldValue.serverTimestamp() -> get current time
+
+                double entertainmentCostCoinValue = checkCoinApproximation(entertainment);
+                double foodCostCoinValue = checkCoinApproximation(food);
+                double TransportCostCoinValue = checkCoinApproximation(transportation);
+                double UtilityCostCoinValue = checkCoinApproximation(utility);
+
+
+                //insert data
+                _firestore.collection('categories').add({'entertainmentcost': entertainmentCostCoinValue, 'foodcost' : foodCostCoinValue,'transportcost': TransportCostCoinValue,'utilitycost':UtilityCostCoinValue,'timestamp' : selectedDate});
+
                 // Perform insertion logic with the variables and selected date
                 print('Food: $food');
                 print('Utility: $utility');
                 print('Transportation: $transportation');
                 print('Entertainment: $entertainment');
                 print('Selected Date: $selectedDate');
+
               },
               child: Text('Insert Data'),
             ),
@@ -142,4 +155,24 @@ class Insert extends State<InsertPage> {
       ),
     );
   }
+}
+
+double checkCoinApproximation(String amountString) {
+
+  double amount = double.parse(amountString);
+  String formattedAmount = amount.toStringAsFixed(2); // "1.03"
+
+  // Check if the second decimal place needs to be rounded
+  if  (formattedAmount.substring(formattedAmount.length - 1) != "5" || formattedAmount.substring(formattedAmount.length - 1) != "0") {
+    int wholeNumber = amount.truncate();
+    int tenthsDigit = (amount * 10).floor() % 10;
+    if (wholeNumber == 1 && tenthsDigit >= 1 && tenthsDigit <= 4)  {
+      // Round down to the nearest coin approximation
+      amount = double.parse(wholeNumber.toString() + ".0");
+    }else if (wholeNumber == 1 && tenthsDigit >= 6 && tenthsDigit <= 9){
+      amount = double.parse(wholeNumber.toString() + ".1");
+    }
+  }
+
+  return amount;
 }

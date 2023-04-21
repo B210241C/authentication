@@ -1,5 +1,7 @@
 //import 'dart:ffi';
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,12 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
-
 class MyPage extends StatefulWidget {
   @override
   SummarySpend createState() => SummarySpend();
 }
-
 
 
 class SummarySpend extends State<MyPage> {
@@ -22,7 +22,7 @@ class SummarySpend extends State<MyPage> {
       .collection('categories')
       .doc('Kdkv6798qnRIezQA5u7f');
 
-int choosedatenumber = 0;
+
 
   late DateTime? pickedDate;
   late DateTime selectedDate = DateTime.now();
@@ -34,11 +34,10 @@ int choosedatenumber = 0;
   double transportcost = 0.0;
   double entertainmentcost = 0.0;
 
-  double foodcostTotal = 0.0;
-  double utilitycostTotal = 0.0;
-  double transportcostTotal = 0.0;
-  double entertainmentcostTotal = 0.0;
-
+  static double foodcostTotal = 0.0;
+  static double utilitycostTotal = 0.0;
+  static double transportcostTotal = 0.0;
+  static double entertainmentcostTotal = 0.0;
 
   String selectedPeriod = 'Daily'; // Default selected period is 'Daily'
   double summary = 50.0; // Pre-filled data for Summary (as a percentage)
@@ -49,20 +48,11 @@ int choosedatenumber = 0;
   // late final messageWidget;
   // List<Text> messagesWidget = [];
 
+  //Controller for each text field
   TextEditingController foodController = TextEditingController();
   TextEditingController utilityController = TextEditingController();
   TextEditingController transportationController = TextEditingController();
   TextEditingController entertainmentController = TextEditingController();
-
-  // Add your logic here for handling the picked date and fetching data from the database
-
-
-  //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   selectedDate = DateTime.now();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -120,26 +110,46 @@ int choosedatenumber = 0;
 
 
 
+            // pop put calander to select date
             SizedBox(height: 16.0),
+
+            //display selected date
             Text('Selected Date: ${selectedDate.toString()}'),
+
+
+
             ElevatedButton(
               onPressed: () {
                 // Add your logic here for displaying date picker
                 _showDatePicker(context);
 
-                // foodcostTotal = 0;
-                // utilitycostTotal = 0;
-                // transportcostTotal = 0;
-                // entertainmentcostTotal = 0;
+                // Initialize the values of all categories to zero
+                foodcostTotal = 0.0;
+                utilitycostTotal = 0.0;
+                transportcostTotal = 0.0;
+                entertainmentcostTotal = 0.0;
 
 
 
+                foodController.clear();
+                utilityController.clear();
+                transportationController.clear();
+                entertainmentController.clear();
+
+
+                selectedDate = selectedDate ?? DateTime.now();
 
               },
               child: Text('Choose Date'),
 
+
             ),
+
+
+
+
             SizedBox(height: 16.0),
+            //button to show summary
             ElevatedButton(
 
               onPressed: () async {
@@ -156,6 +166,22 @@ int choosedatenumber = 0;
                   QuerySnapshot snapshot = await usersRef.where('timestamp', isGreaterThanOrEqualTo: pickedTimestamp, isLessThan: Timestamp.fromDate(pickedDate!.add(Duration(days: 1)))).get();
 
 
+                  // // Set the start time to the beginning of the selected day
+                  // DateTime startTime = DateTime(pickedDate!.year, pickedDate!.month, pickedDate!.day, 0, 0, 0);
+                  //
+                  // // Set the end time to the end of the selected day
+                  // DateTime endTime = DateTime(pickedDate!.year, pickedDate!.month, pickedDate!.day, 23, 59, 59);
+                  //
+                  // // Convert the start and end times to Timestamp objects
+                  // final startTimestamp = Timestamp.fromDate(startTime);
+                  // final endTimestamp = Timestamp.fromDate(endTime);
+                  //
+                  // // Query the categories collection for documents with a timestamp
+                  // // greater than or equal to the start of the selected day and less
+                  // // than the end of the selected day
+                  // QuerySnapshot snapshot = await usersRef.where('timestamp', isGreaterThanOrEqualTo: startTimestamp, isLessThanOrEqualTo: endTimestamp).get();
+
+
                   // Update the state of the app to display the appropriate values
                   if (snapshot.docs.isNotEmpty) {
 
@@ -170,45 +196,18 @@ int choosedatenumber = 0;
                       entertainmentcostTotal = 0.0;
 
 
-
-
-                      // for (final document in snapshot.docs) {
-                      //   // Get the data from the document
-                      //   //final data = document.data();
-                      //
-                      //   final Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-                      //
-                      //   // Add the cost of each category to their respective totals
-                      //   foodcostTotal += int.parse((data['foodcost'] ?? '0').toString());
-                      //   utilitycostTotal += int.parse((data['utilitycost'] ?? '0').toString());
-                      //   transportcostTotal += int.parse((data['transportcost'] ?? '0').toString());
-                      //   entertainmentcostTotal += int.parse((data['entertainmentcost'] ?? '0').toString());
-                      //
-                      //   // foodcostTotal += int.parse((document.data() as Map<String, dynamic>)['foodcost']);
-                      //   // utilitycostTotal += int.parse((document.data() as Map<String, dynamic>)['utilitycost']);
-                      //   // transportcostTotal += int.parse((document.data() as Map<String, dynamic>)['transportcost']);
-                      //   // entertainmentcostTotal += int.parse((document.data() as Map<String, dynamic>)['entertainmentcost']);
-                      //
-                      //   // You can also display the data from each document individually here
-                      //   // by adding them to a list and then displaying the list in your widget
-                      // }
-                      //       foodController.text = foodcostTotal.toString();
-                      //       utilityController.text = utilitycostTotal.toString();
-                      //       transportationController.text = transportcostTotal.toString();
-                      //       entertainmentController.text = entertainmentcostTotal.toString();
-
-
-
                       snapshot.docs.forEach((document) {
 
 
                           final Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
-                          // Add the cost of each category to their respective totals
-                          foodcostTotal += int.parse((data['foodcost'] ??'0').toString());
-                          utilitycostTotal += int.parse((data['utilitycost'] ??'0').toString());
-                          transportcostTotal += int.parse((data['transportcost'] ??'0').toString());
-                          entertainmentcostTotal += int.parse((data['entertainmentcost'] ??'0').toString());
+
+
+                          // Add the cost of each category to their respective totals ,if nothing it will return 0
+                          foodcostTotal +=  double.parse(data['foodcost']?.toString() ?? '0');
+                          utilitycostTotal += double.parse(data['utilitycost'].toString() ?? '0');
+                          transportcostTotal += double.parse(data['transportcost'].toString() ??'0');
+                          entertainmentcostTotal += double.parse(data['entertainmentcost'].toString() ??'0');
 
 
 
@@ -219,6 +218,8 @@ int choosedatenumber = 0;
 
                       });
 
+                      pickedDate = DateTime.now();
+
 
 
                     });
@@ -227,17 +228,17 @@ int choosedatenumber = 0;
                     // No data was found for the selected date
                     setState(() {
 
-                      // pickedDate = null;
+                      //show 0 in the text field
+                      foodController.text = foodcostTotal.toString() ?? '0';
+                      utilityController.text = utilitycostTotal.toString() ?? '0';
+                      transportationController.text = transportcostTotal.toString() ?? '0';
+                      entertainmentController.text = entertainmentcostTotal.toString() ?? '0';
 
 
                     });
                   }
 
                 }
-                // foodController.clear();
-                // utilityController.clear();
-                // transportationController.clear();
-                // entertainmentController.clear();
 
                 // Add your logic here for saving data to the database
 
@@ -258,6 +259,7 @@ int choosedatenumber = 0;
       initialDate: DateTime.now(),
       firstDate: DateTime(2021),
       lastDate: DateTime(2030),
+      helpText: 'Select a date between 2021 and 2030',
     );
 
 
