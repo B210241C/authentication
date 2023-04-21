@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:976293627311:android:739142743616037a609b5a",
+        "android_client_info": {
+          "package_name": "com.durian.expenseTracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "976293627311-dp1lke6j395t2eef9ov7iutjjbu0oeht.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCq-FrWehN9jdQh9gTZv12T34agw-FMa6o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "976293627311-dp1lke6j395t2eef9ov7iutjjbu0oeht.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "976293627311-a1g5hd685cdhvq97o8b342cn2movmv2i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.authentication"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:976293627311:android:515ae54380056cf2609b5a",
         "android_client_info": {
           "package_name": "com.example.project"
@@ -31,10 +67,10 @@
               "client_type": 3
             },
             {
-              "client_id": "976293627311-fc7h9vu425f91eg3g35mm0lb2g1vd7oj.apps.googleusercontent.com",
+              "client_id": "976293627311-a1g5hd685cdhvq97o8b342cn2movmv2i.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.project"
+                "bundle_id": "com.example.authentication"
               }
             }
           ]
